@@ -1,14 +1,19 @@
-"use client"
+'use client'
 
-import { useState, useRef, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { LuMessageCircle as MessageCircle, LuX as X, LuSend as Send, LuLeaf as Leaf } from "react-icons/lu"
+import { useState, useRef, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import {
+  LuMessageCircle as MessageCircle,
+  LuX as X,
+  LuSend as Send,
+  LuLeaf as Leaf,
+} from 'react-icons/lu'
 
 type Message = { id: string; role: 'user' | 'assistant'; content: string }
 
 export function LeafyChatWidget() {
   const [isOpen, setIsOpen] = useState(false)
-  const [input, setInput] = useState("")
+  const [input, setInput] = useState('')
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -16,10 +21,10 @@ export function LeafyChatWidget() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!input.trim() || isLoading) return
-    
-    const userMsg: Message = { id: Date.now().toString(), role: "user", content: input }
-    setMessages(prev => [...prev, userMsg])
-    setInput("")
+
+    const userMsg: Message = { id: Date.now().toString(), role: 'user', content: input }
+    setMessages((prev) => [...prev, userMsg])
+    setInput('')
     setIsLoading(true)
 
     try {
@@ -34,16 +39,20 @@ export function LeafyChatWidget() {
 
       const reader = res.body.getReader()
       const decoder = new TextDecoder()
-      const assistantMsg: Message = { id: (Date.now() + 1).toString(), role: "assistant", content: "" }
-      
-      setMessages(prev => [...prev, assistantMsg])
+      const assistantMsg: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: '',
+      }
+
+      setMessages((prev) => [...prev, assistantMsg])
 
       while (true) {
         const { done, value } = await reader.read()
         if (done) break
         const text = decoder.decode(value, { stream: true })
         assistantMsg.content += text
-        setMessages(prev => [...prev.slice(0, -1), { ...assistantMsg }])
+        setMessages((prev) => [...prev.slice(0, -1), { ...assistantMsg }])
       }
     } catch (error) {
       console.error(error)
@@ -55,7 +64,7 @@ export function LeafyChatWidget() {
   // Scroll to bottom when messages change
   useEffect(() => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
     }
   }, [messages])
 
@@ -106,10 +115,14 @@ export function LeafyChatWidget() {
               {messages.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center space-y-3 opacity-60">
                   <Leaf className="h-10 w-10 text-emerald-400 mb-2" />
-                  <p className="text-sm">Hi! I&apos;m Leafy. 🌿<br/>Ask me about reducing your carbon footprint or how to earn more Eco Points!</p>
+                  <p className="text-sm">
+                    Hi! I&apos;m Leafy. 🌿
+                    <br />
+                    Ask me about reducing your carbon footprint or how to earn more Eco Points!
+                  </p>
                 </div>
               ) : (
-                messages.map(m => (
+                messages.map((m) => (
                   <div
                     key={m.id}
                     className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
@@ -145,7 +158,7 @@ export function LeafyChatWidget() {
                   className="flex-1 bg-white/[0.05] border border-white/10 text-white text-sm rounded-xl px-4 py-2.5 outline-none focus:border-emerald-500/50 transition-colors placeholder:text-white/30"
                   value={input}
                   placeholder="Ask Leafy anything..."
-                  onChange={e => setInput(e.target.value)}
+                  onChange={(e) => setInput(e.target.value)}
                   disabled={isLoading}
                 />
                 <button

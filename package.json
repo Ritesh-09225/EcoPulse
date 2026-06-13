@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "jest"
+    "test": "jest",
+    "format": "prettier --write .",
+    "prepare": "husky"
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.81",
@@ -41,8 +43,12 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.1",
+    "lint-staged": "^17.0.7",
+    "prettier": "^3.8.4",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
     "typescript": "^5"

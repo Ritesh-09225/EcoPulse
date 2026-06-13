@@ -1,20 +1,27 @@
-"use client"
+'use client'
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { useEffect, useState } from "react"
-import { LuLeaf as Leaf, LuLayoutDashboard as LayoutDashboard, LuTarget as Target, LuTrophy as Trophy, LuUsers as Users, LuActivity as Activity } from "react-icons/lu"
-import { cn } from "@/lib/utils"
-import { createClient } from "@/lib/supabase/client"
-import { getLevelName, getPointsForNextLevel } from "@/lib/supabase/types"
-import type { Profile } from "@/lib/supabase/types"
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import {
+  LuLeaf as Leaf,
+  LuLayoutDashboard as LayoutDashboard,
+  LuTarget as Target,
+  LuTrophy as Trophy,
+  LuUsers as Users,
+  LuActivity as Activity,
+} from 'react-icons/lu'
+import { cn } from '@/lib/utils'
+import { createClient } from '@/lib/supabase/client'
+import { getLevelName, getPointsForNextLevel } from '@/lib/supabase/types'
+import type { Profile } from '@/lib/supabase/types'
 
 const navItems = [
-  { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Activities", href: "/dashboard/activities", icon: Activity },
-  { name: "Challenges", href: "/dashboard/challenges", icon: Target },
-  { name: "Leaderboard", href: "/dashboard/leaderboard", icon: Trophy },
-  { name: "Clans", href: "/dashboard/clans", icon: Users },
+  { name: 'Overview', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Activities', href: '/dashboard/activities', icon: Activity },
+  { name: 'Challenges', href: '/dashboard/challenges', icon: Target },
+  { name: 'Leaderboard', href: '/dashboard/leaderboard', icon: Trophy },
+  { name: 'Clans', href: '/dashboard/clans', icon: Users },
 ]
 
 export function DashboardSidebar() {
@@ -25,11 +32,7 @@ export function DashboardSidebar() {
     const supabase = createClient()
     supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (!user) return
-      const { data } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user.id)
-        .single()
+      const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single()
       setProfile(data)
     })
   }, [])
@@ -55,8 +58,8 @@ export function DashboardSidebar() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
-                    isActive && "bg-muted text-primary"
+                    'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
+                    isActive && 'bg-muted text-primary',
                   )}
                 >
                   <item.icon className="h-4 w-4" />
@@ -82,7 +85,9 @@ export function DashboardSidebar() {
                     style={{ width: `${percent}%` }}
                   />
                 </div>
-                <div className="text-[10px] text-muted-foreground mt-1 text-right">{percent}% to next level</div>
+                <div className="text-[10px] text-muted-foreground mt-1 text-right">
+                  {percent}% to next level
+                </div>
               </>
             ) : (
               <div className="space-y-2 animate-pulse">

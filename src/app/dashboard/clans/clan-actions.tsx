@@ -1,8 +1,8 @@
-"use client"
+'use client'
 
-import { useTransition } from "react"
-import { joinClan, leaveClan } from "@/lib/data"
-import { LuLogOut as LogOut, LuUserPlus as UserPlus } from "react-icons/lu"
+import { useTransition } from 'react'
+import { joinClan, leaveClan } from '@/lib/data'
+import { LuLogOut as LogOut, LuUserPlus as UserPlus } from 'react-icons/lu'
 
 interface ClanActionsProps {
   clanId: string

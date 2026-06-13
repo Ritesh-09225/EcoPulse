@@ -1,12 +1,12 @@
-"use client"
+'use client'
 
-import { useEffect, useState } from "react"
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts"
-import { createClient } from "@/lib/supabase/client"
+import { useEffect, useState } from 'react'
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts'
+import { createClient } from '@/lib/supabase/client'
 
 type ChartPoint = { name: string; saved: number; emitted: number }
 
-const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 export function DashboardCharts() {
   const [data, setData] = useState<ChartPoint[]>([])
@@ -15,8 +15,13 @@ export function DashboardCharts() {
   useEffect(() => {
     async function load() {
       const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { setLoading(false); return }
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (!user) {
+        setLoading(false)
+        return
+      }
 
       // Fetch last 7 days of activities
       const since = new Date()
@@ -24,10 +29,10 @@ export function DashboardCharts() {
       since.setHours(0, 0, 0, 0)
 
       const { data: activities } = await supabase
-        .from("activities")
-        .select("co2_kg, created_at")
-        .eq("user_id", user.id)
-        .gte("created_at", since.toISOString())
+        .from('activities')
+        .select('co2_kg, created_at')
+        .eq('user_id', user.id)
+        .gte('created_at', since.toISOString())
 
       // Build 7-day buckets
       const buckets: Record<string, { saved: number; emitted: number }> = {}
@@ -65,7 +70,7 @@ export function DashboardCharts() {
     )
   }
 
-  const isEmpty = data.every(d => d.saved === 0 && d.emitted === 0)
+  const isEmpty = data.every((d) => d.saved === 0 && d.emitted === 0)
 
   if (isEmpty) {
     return (
@@ -81,11 +86,24 @@ export function DashboardCharts() {
     <ResponsiveContainer width="100%" height={350}>
       <BarChart data={data} barGap={4}>
         <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-        <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(v) => `${v}kg`} />
+        <YAxis
+          stroke="#888888"
+          fontSize={12}
+          tickLine={false}
+          axisLine={false}
+          tickFormatter={(v) => `${v}kg`}
+        />
         <Tooltip
-          cursor={{ fill: "rgba(0,0,0,0.05)" }}
-          contentStyle={{ borderRadius: "8px", border: "none", boxShadow: "0 4px 6px -1px rgb(0 0 0/0.1)" }}
-          formatter={(value, name) => [`${Number(value).toFixed(1)} kg`, name === "saved" ? "CO₂ Saved" : "CO₂ Emitted"]}
+          cursor={{ fill: 'rgba(0,0,0,0.05)' }}
+          contentStyle={{
+            borderRadius: '8px',
+            border: 'none',
+            boxShadow: '0 4px 6px -1px rgb(0 0 0/0.1)',
+          }}
+          formatter={(value, name) => [
+            `${Number(value).toFixed(1)} kg`,
+            name === 'saved' ? 'CO₂ Saved' : 'CO₂ Emitted',
+          ]}
         />
         <Bar dataKey="emitted" fill="#f87171" radius={[4, 4, 0, 0]} name="emitted" />
         <Bar dataKey="saved" fill="#34d399" radius={[4, 4, 0, 0]} name="saved" />

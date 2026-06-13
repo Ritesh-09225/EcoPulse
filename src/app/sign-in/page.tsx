@@ -1,12 +1,12 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { motion } from "framer-motion"
-import Link from "next/link"
-import { LuLeaf as Leaf, LuTriangleAlert as AlertCircle } from "react-icons/lu"
-import { createClient } from "@/lib/supabase/client"
-import { useSearchParams } from "next/navigation"
-import { Suspense } from "react"
+import { useState } from 'react'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { LuLeaf as Leaf, LuTriangleAlert as AlertCircle } from 'react-icons/lu'
+import { createClient } from '@/lib/supabase/client'
+import { useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
 
 function GoogleIcon() {
   return (
@@ -34,13 +34,13 @@ function GoogleIcon() {
 function SignInContent() {
   const [isLoading, setIsLoading] = useState(false)
   const searchParams = useSearchParams()
-  const error = searchParams.get("error")
+  const error = searchParams.get('error')
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true)
     const supabase = createClient()
     await supabase.auth.signInWithOAuth({
-      provider: "google",
+      provider: 'google',
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
       },
@@ -72,18 +72,17 @@ function SignInContent() {
         <motion.div
           initial={{ opacity: 0, y: 24, scale: 0.97 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
           className="w-full max-w-md"
         >
           {/* Card */}
           <div className="bg-white/[0.03] border border-white/10 backdrop-blur-md rounded-3xl p-8 md:p-10 shadow-2xl shadow-black/30">
-            
             {/* Icon + Heading */}
             <div className="text-center mb-8">
               <motion.div
                 initial={{ scale: 0.5, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 0.15, duration: 0.5, type: "spring" }}
+                transition={{ delay: 0.15, duration: 0.5, type: 'spring' }}
                 className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 mb-6 mx-auto"
               >
                 <Leaf className="h-8 w-8 text-emerald-400" />
@@ -92,7 +91,8 @@ function SignInContent() {
                 Welcome to EcoPulse
               </h1>
               <p className="text-white/60 text-sm leading-relaxed">
-                Track your carbon footprint, earn rewards, and join<br className="hidden sm:block" /> the movement toward a sustainable future.
+                Track your carbon footprint, earn rewards, and join
+                <br className="hidden sm:block" /> the movement toward a sustainable future.
               </p>
             </div>
 
@@ -104,9 +104,7 @@ function SignInContent() {
                 className="flex items-center gap-3 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 mb-6"
               >
                 <AlertCircle className="h-4 w-4 text-red-400 shrink-0" />
-                <p className="text-red-400 text-sm">
-                  Authentication failed. Please try again.
-                </p>
+                <p className="text-red-400 text-sm">Authentication failed. Please try again.</p>
               </motion.div>
             )}
 
@@ -124,7 +122,7 @@ function SignInContent() {
               ) : (
                 <GoogleIcon />
               )}
-              {isLoading ? "Redirecting to Google..." : "Continue with Google"}
+              {isLoading ? 'Redirecting to Google...' : 'Continue with Google'}
             </motion.button>
 
             {/* Divider */}
@@ -152,12 +150,18 @@ function SignInContent() {
 
             {/* Terms */}
             <p className="text-center text-white/30 text-xs mt-6 leading-relaxed">
-              By continuing, you agree to our{" "}
-              <Link href="#" className="text-emerald-400/80 hover:text-emerald-400 underline underline-offset-2 transition-colors">
+              By continuing, you agree to our{' '}
+              <Link
+                href="#"
+                className="text-emerald-400/80 hover:text-emerald-400 underline underline-offset-2 transition-colors"
+              >
                 Terms of Service
-              </Link>{" "}
-              and{" "}
-              <Link href="#" className="text-emerald-400/80 hover:text-emerald-400 underline underline-offset-2 transition-colors">
+              </Link>{' '}
+              and{' '}
+              <Link
+                href="#"
+                className="text-emerald-400/80 hover:text-emerald-400 underline underline-offset-2 transition-colors"
+              >
                 Privacy Policy
               </Link>
               .
@@ -166,10 +170,7 @@ function SignInContent() {
 
           {/* Back link */}
           <div className="text-center mt-6">
-            <Link
-              href="/"
-              className="text-white/40 hover:text-white/70 text-sm transition-colors"
-            >
+            <Link href="/" className="text-white/40 hover:text-white/70 text-sm transition-colors">
               ← Back to homepage
             </Link>
           </div>
@@ -185,9 +186,9 @@ function SignInContent() {
       >
         <div className="max-w-md mx-auto grid grid-cols-3 gap-4 text-center">
           {[
-            { num: "84K+", label: "Active Users" },
-            { num: "2.4M", label: "kg CO₂ Saved" },
-            { num: "6,700", label: "Challenges Met" },
+            { num: '84K+', label: 'Active Users' },
+            { num: '2.4M', label: 'kg CO₂ Saved' },
+            { num: '6,700', label: 'Challenges Met' },
           ].map((stat) => (
             <div key={stat.label} className="bg-white/[0.02] border border-white/5 rounded-2xl p-3">
               <div className="text-lg font-bold text-emerald-400">{stat.num}</div>

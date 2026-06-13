@@ -1,10 +1,16 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { LuUsers as Users, LuTrophy as Trophy, LuLeaf as Leaf, LuCrown as Crown, LuTarget as Target } from "react-icons/lu"
-import { getMyClan, getClanLeaderboard, getClansToDiscover, getMyProfile } from "@/lib/data"
-import { ClanActions } from "./clan-actions"
-import { CreateClanModal } from "@/components/create-clan-modal"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import {
+  LuUsers as Users,
+  LuTrophy as Trophy,
+  LuLeaf as Leaf,
+  LuCrown as Crown,
+  LuTarget as Target,
+} from 'react-icons/lu'
+import { getMyClan, getClanLeaderboard, getClansToDiscover, getMyProfile } from '@/lib/data'
+import { ClanActions } from './clan-actions'
+import { CreateClanModal } from '@/components/create-clan-modal'
 
 export default async function ClansPage() {
   const [myClan, leaderboard, discoverClans, profile] = await Promise.all([
@@ -15,7 +21,7 @@ export default async function ClansPage() {
   ])
 
   // Filter out user's own clan from discover list
-  const clansToJoin = discoverClans.filter(c => c.clan_id !== myClan?.id)
+  const clansToJoin = discoverClans.filter((c) => c.clan_id !== myClan?.id)
 
   return (
     <div className="flex flex-col gap-6">
@@ -39,7 +45,9 @@ export default async function ClansPage() {
                 <div>
                   <CardTitle className="flex items-center gap-2">
                     {myClan.name}
-                    <Badge variant="outline" className="text-xs px-2 py-0.5">{myClan.tag}</Badge>
+                    <Badge variant="outline" className="text-xs px-2 py-0.5">
+                      {myClan.tag}
+                    </Badge>
                   </CardTitle>
                   <CardDescription>{myClan.description || 'No description'}</CardDescription>
                 </div>
@@ -55,7 +63,9 @@ export default async function ClansPage() {
                 <div className="text-xs text-muted-foreground mt-0.5">Members</div>
               </div>
               <div className="text-center p-3 rounded-xl bg-background/50 border border-border">
-                <div className="text-2xl font-bold text-primary">{myClan.total_points.toLocaleString()}</div>
+                <div className="text-2xl font-bold text-primary">
+                  {myClan.total_points.toLocaleString()}
+                </div>
                 <div className="text-xs text-muted-foreground mt-0.5">Combined Pts</div>
               </div>
               <div className="text-center p-3 rounded-xl bg-background/50 border border-border">
@@ -66,16 +76,31 @@ export default async function ClansPage() {
 
             {/* Members list */}
             <div className="space-y-3">
-              <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Members</h4>
+              <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                Members
+              </h4>
               {myClan.members.map((member) => {
                 const initials = member.profile?.full_name
-                  ? member.profile.full_name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
+                  ? member.profile.full_name
+                      .split(' ')
+                      .map((n) => n[0])
+                      .join('')
+                      .slice(0, 2)
+                      .toUpperCase()
                   : '??'
                 return (
-                  <div key={member.id} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-muted/30 transition-colors">
+                  <div
+                    key={member.id}
+                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-muted/30 transition-colors"
+                  >
                     <Avatar className="h-9 w-9 border shrink-0">
-                      <AvatarImage src={member.profile?.avatar_url ?? undefined} alt={member.profile?.full_name ?? 'User'} />
-                      <AvatarFallback className="bg-emerald-700 text-white text-xs font-bold">{initials}</AvatarFallback>
+                      <AvatarImage
+                        src={member.profile?.avatar_url ?? undefined}
+                        alt={member.profile?.full_name ?? 'User'}
+                      />
+                      <AvatarFallback className="bg-emerald-700 text-white text-xs font-bold">
+                        {initials}
+                      </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium leading-none truncate flex items-center gap-2">
@@ -84,11 +109,14 @@ export default async function ClansPage() {
                           <Crown className="h-3.5 w-3.5 text-amber-500 shrink-0" />
                         )}
                         {member.user_id === profile?.id && (
-                          <Badge variant="default" className="text-[10px] h-4 px-1 shrink-0">YOU</Badge>
+                          <Badge variant="default" className="text-[10px] h-4 px-1 shrink-0">
+                            YOU
+                          </Badge>
                         )}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        Level {member.profile?.level ?? 1} · {member.profile?.eco_points?.toLocaleString() ?? 0} pts
+                        Level {member.profile?.level ?? 1} ·{' '}
+                        {member.profile?.eco_points?.toLocaleString() ?? 0} pts
                       </p>
                     </div>
                   </div>
@@ -106,7 +134,8 @@ export default async function ClansPage() {
             <div>
               <h3 className="text-xl font-bold mb-2">You&apos;re not in a clan yet</h3>
               <p className="text-muted-foreground max-w-md text-sm leading-relaxed">
-                Create your own eco-squad or join an existing one below to combine your impact with others.
+                Create your own eco-squad or join an existing one below to combine your impact with
+                others.
               </p>
             </div>
           </CardContent>
@@ -137,14 +166,21 @@ export default async function ClansPage() {
                     <div
                       key={clan.clan_id}
                       className={`flex items-center gap-3 p-3 rounded-xl border transition-colors ${
-                        isMyRank ? 'bg-primary/10 border-primary/30' : 'bg-card hover:bg-muted/40 border-border'
+                        isMyRank
+                          ? 'bg-primary/10 border-primary/30'
+                          : 'bg-card hover:bg-muted/40 border-border'
                       }`}
                     >
                       <div className="flex items-center justify-center w-8 font-bold text-muted-foreground shrink-0">
-                        {rank === 1 ? <span className="text-lg">🥇</span>
-                        : rank === 2 ? <span className="text-lg">🥈</span>
-                        : rank === 3 ? <span className="text-lg">🥉</span>
-                        : <span className="text-sm">#{rank}</span>}
+                        {rank === 1 ? (
+                          <span className="text-lg">🥇</span>
+                        ) : rank === 2 ? (
+                          <span className="text-lg">🥈</span>
+                        ) : rank === 3 ? (
+                          <span className="text-lg">🥉</span>
+                        ) : (
+                          <span className="text-sm">#{rank}</span>
+                        )}
                       </div>
                       <div className="h-9 w-9 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
                         <Users className="h-4 w-4 text-primary" />
@@ -152,7 +188,11 @@ export default async function ClansPage() {
                       <div className="flex-1 min-w-0 space-y-0.5">
                         <p className="text-sm font-medium leading-none truncate flex items-center gap-2">
                           {clan.name}
-                          {isMyRank && <Badge variant="default" className="text-[10px] h-4 px-1 shrink-0">YOUR CLAN</Badge>}
+                          {isMyRank && (
+                            <Badge variant="default" className="text-[10px] h-4 px-1 shrink-0">
+                              YOUR CLAN
+                            </Badge>
+                          )}
                         </p>
                         <p className="text-xs text-muted-foreground">
                           {clan.member_count} members · {clan.tag}
@@ -186,19 +226,21 @@ export default async function ClansPage() {
             ) : (
               <div className="space-y-3">
                 {clansToJoin.map((clan) => (
-                  <div key={clan.clan_id} className="flex items-center gap-3 p-3 rounded-xl border border-border bg-card hover:bg-muted/40 transition-colors">
+                  <div
+                    key={clan.clan_id}
+                    className="flex items-center gap-3 p-3 rounded-xl border border-border bg-card hover:bg-muted/40 transition-colors"
+                  >
                     <div className="h-9 w-9 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
                       <Leaf className="h-4 w-4 text-emerald-500" />
                     </div>
                     <div className="flex-1 min-w-0 space-y-0.5">
                       <p className="text-sm font-medium leading-none truncate">{clan.name}</p>
                       <p className="text-xs text-muted-foreground">
-                        {clan.member_count} members · {clan.tag} · {clan.total_points.toLocaleString()} pts
+                        {clan.member_count} members · {clan.tag} ·{' '}
+                        {clan.total_points.toLocaleString()} pts
                       </p>
                     </div>
-                    {!myClan && (
-                      <ClanActions clanId={clan.clan_id} joinMode />
-                    )}
+                    {!myClan && <ClanActions clanId={clan.clan_id} joinMode />}
                   </div>
                 ))}
               </div>

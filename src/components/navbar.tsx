@@ -1,18 +1,18 @@
-"use client"
+'use client'
 
-import Link from "next/link"
-import { useEffect, useState } from "react"
-import { LuLeaf as Leaf, LuLogOut as LogOut, LuLayoutDashboard as Dashboard } from "react-icons/lu"
-import { createClient } from "@/lib/supabase/client"
-import type { User } from "@supabase/supabase-js"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { LuLeaf as Leaf, LuLogOut as LogOut, LuLayoutDashboard as Dashboard } from 'react-icons/lu'
+import { createClient } from '@/lib/supabase/client'
+import type { User } from '@supabase/supabase-js'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from '@/components/ui/dropdown-menu'
 
 export function Navbar() {
   const [user, setUser] = useState<User | null>(null)
@@ -28,7 +28,9 @@ export function Navbar() {
     })
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
     })
 
@@ -38,12 +40,17 @@ export function Navbar() {
   const handleSignOut = async () => {
     const supabase = createClient()
     await supabase.auth.signOut()
-    window.location.href = "/"
+    window.location.href = '/'
   }
 
   const userInitials = user?.user_metadata?.full_name
-    ? user.user_metadata.full_name.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase()
-    : user?.email?.slice(0, 2).toUpperCase() ?? "U"
+    ? user.user_metadata.full_name
+        .split(' ')
+        .map((n: string) => n[0])
+        .join('')
+        .slice(0, 2)
+        .toUpperCase()
+    : (user?.email?.slice(0, 2).toUpperCase() ?? 'U')
 
   return (
     <header className="sticky top-0 z-50 w-full bg-[#022C22]/80 backdrop-blur-md border-b border-white/5">
@@ -56,16 +63,28 @@ export function Navbar() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
-          <Link href="#why-it-matters" className="text-sm text-white/70 hover:text-white transition-colors duration-200">
+          <Link
+            href="#why-it-matters"
+            className="text-sm text-white/70 hover:text-white transition-colors duration-200"
+          >
             Why It Matters
           </Link>
-          <Link href="#how-it-works" className="text-sm text-white/70 hover:text-white transition-colors duration-200">
+          <Link
+            href="#how-it-works"
+            className="text-sm text-white/70 hover:text-white transition-colors duration-200"
+          >
             How It Works
           </Link>
-          <Link href="#impact" className="text-sm text-white/70 hover:text-white transition-colors duration-200">
+          <Link
+            href="#impact"
+            className="text-sm text-white/70 hover:text-white transition-colors duration-200"
+          >
             Impact
           </Link>
-          <Link href="#testimonials" className="text-sm text-white/70 hover:text-white transition-colors duration-200">
+          <Link
+            href="#testimonials"
+            className="text-sm text-white/70 hover:text-white transition-colors duration-200"
+          >
             Testimonials
           </Link>
         </nav>
@@ -92,7 +111,7 @@ export function Navbar() {
                     <Avatar className="h-9 w-9">
                       <AvatarImage
                         src={user.user_metadata?.avatar_url}
-                        alt={user.user_metadata?.full_name ?? "User"}
+                        alt={user.user_metadata?.full_name ?? 'User'}
                       />
                       <AvatarFallback className="bg-emerald-700 text-white text-xs font-bold">
                         {userInitials}
@@ -106,7 +125,7 @@ export function Navbar() {
                 >
                   <div className="px-3 py-2 mb-1">
                     <p className="text-sm font-semibold text-white truncate">
-                      {user.user_metadata?.full_name ?? "EcoPulse User"}
+                      {user.user_metadata?.full_name ?? 'EcoPulse User'}
                     </p>
                     <p className="text-xs text-white/50 truncate">{user.email}</p>
                   </div>

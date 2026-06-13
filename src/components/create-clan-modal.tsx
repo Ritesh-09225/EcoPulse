@@ -1,9 +1,15 @@
-"use client"
+'use client'
 
-import { useState, useTransition } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { LuX as X, LuPlus as Plus, LuUsers as Users, LuLeaf as Leaf, LuTag as Tag } from "react-icons/lu"
-import { createClan } from "@/lib/data"
+import { useState, useTransition } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import {
+  LuX as X,
+  LuPlus as Plus,
+  LuUsers as Users,
+  LuLeaf as Leaf,
+  LuTag as Tag,
+} from 'react-icons/lu'
+import { createClan } from '@/lib/data'
 
 const CLAN_TAGS = [
   { value: 'Environment', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' },
@@ -17,17 +23,17 @@ const CLAN_TAGS = [
 
 export function CreateClanModal() {
   const [open, setOpen] = useState(false)
-  const [name, setName] = useState("")
-  const [description, setDescription] = useState("")
-  const [tag, setTag] = useState("General")
+  const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
+  const [tag, setTag] = useState('General')
   const [isPending, startTransition] = useTransition()
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const reset = () => {
-    setName("")
-    setDescription("")
-    setTag("General")
+    setName('')
+    setDescription('')
+    setTag('General')
     setSuccess(false)
     setError(null)
   }
@@ -45,7 +51,10 @@ export function CreateClanModal() {
       try {
         await createClan({ name, description, tag })
         setSuccess(true)
-        setTimeout(() => { close(); window.location.reload() }, 1200)
+        setTimeout(() => {
+          close()
+          window.location.reload()
+        }, 1200)
       } catch (e: unknown) {
         const message = e instanceof Error ? e.message : 'Failed to create clan'
         setError(message)
@@ -92,7 +101,10 @@ export function CreateClanModal() {
                       Start an eco-squad and invite others to join
                     </p>
                   </div>
-                  <button onClick={close} className="text-white/40 hover:text-white/70 transition-colors p-1 rounded-lg hover:bg-white/5">
+                  <button
+                    onClick={close}
+                    className="text-white/40 hover:text-white/70 transition-colors p-1 rounded-lg hover:bg-white/5"
+                  >
                     <X className="h-5 w-5" />
                   </button>
                 </div>
@@ -109,7 +121,9 @@ export function CreateClanModal() {
                       </div>
                       <div>
                         <p className="text-white font-semibold text-lg">Clan created!</p>
-                        <p className="text-white/50 text-sm mt-1">You are now the leader of &quot;{name}&quot;.</p>
+                        <p className="text-white/50 text-sm mt-1">
+                          You are now the leader of &quot;{name}&quot;.
+                        </p>
                       </div>
                     </motion.div>
                   ) : (
@@ -123,11 +137,13 @@ export function CreateClanModal() {
 
                       {/* Clan Name */}
                       <div>
-                        <label className="text-sm text-white/70 font-medium mb-2 block">Clan Name *</label>
+                        <label className="text-sm text-white/70 font-medium mb-2 block">
+                          Clan Name *
+                        </label>
                         <input
                           type="text"
                           value={name}
-                          onChange={e => setName(e.target.value)}
+                          onChange={(e) => setName(e.target.value)}
                           placeholder="e.g. Ocean Savers"
                           maxLength={40}
                           className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-white/30 outline-none focus:border-emerald-500/50 focus:bg-white/[0.06] transition-all"
@@ -137,10 +153,12 @@ export function CreateClanModal() {
 
                       {/* Description */}
                       <div>
-                        <label className="text-sm text-white/70 font-medium mb-2 block">Description</label>
+                        <label className="text-sm text-white/70 font-medium mb-2 block">
+                          Description
+                        </label>
                         <textarea
                           value={description}
-                          onChange={e => setDescription(e.target.value)}
+                          onChange={(e) => setDescription(e.target.value)}
                           placeholder="What's your clan about?"
                           rows={3}
                           maxLength={200}
@@ -177,9 +195,14 @@ export function CreateClanModal() {
                         className="w-full bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 disabled:cursor-not-allowed text-[#022C22] font-semibold py-3.5 rounded-2xl transition-all duration-200 text-sm flex items-center justify-center gap-2"
                       >
                         {isPending ? (
-                          <><div className="h-4 w-4 border-2 border-[#022C22]/30 border-t-[#022C22] rounded-full animate-spin" /> Creating...</>
+                          <>
+                            <div className="h-4 w-4 border-2 border-[#022C22]/30 border-t-[#022C22] rounded-full animate-spin" />{' '}
+                            Creating...
+                          </>
                         ) : (
-                          <><Leaf className="h-4 w-4" /> Create Clan</>
+                          <>
+                            <Leaf className="h-4 w-4" /> Create Clan
+                          </>
                         )}
                       </button>
                     </div>

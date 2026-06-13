@@ -6,7 +6,7 @@ import { createClient } from '@supabase/supabase-js'
 // though reading knowledge_base is public so anon key would work too.
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 )
 
 const LEAFY_SYSTEM_PROMPT = `You are Leafy, a sweet, charming, and highly encouraging AI assistant for the EcoPulse app.
@@ -52,7 +52,9 @@ export async function POST(req: Request) {
     // 3. Construct the context from retrieved documents
     let contextText = ''
     if (documents && documents.length > 0) {
-      contextText = "\n\nContext from Knowledge Base:\n" + documents.map((doc: { content: string }) => `- ${doc.content}`).join("\n")
+      contextText =
+        '\n\nContext from Knowledge Base:\n' +
+        documents.map((doc: { content: string }) => `- ${doc.content}`).join('\n')
     }
 
     // 4. Stream response using Gemini 1.5 Flash
@@ -62,7 +64,6 @@ export async function POST(req: Request) {
       messages,
     })
     return result.toTextStreamResponse()
-
   } catch (error) {
     console.error('Chat API Error:', error)
     return new Response('Internal Server Error', { status: 500 })
