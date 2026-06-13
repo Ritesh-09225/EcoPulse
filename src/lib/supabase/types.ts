@@ -122,7 +122,10 @@ export function getLevelName(level: number): string {
   return LEVEL_NAMES[level] ?? `Level ${level}`
 }
 
-export function getPointsForNextLevel(currentPoints: number, level: number): { current: number; required: number; percent: number } {
+export function getPointsForNextLevel(
+  currentPoints: number,
+  level: number,
+): { current: number; required: number; percent: number } {
   const required = level * 1000
   const base = (level - 1) * 1000
   const current = currentPoints - base

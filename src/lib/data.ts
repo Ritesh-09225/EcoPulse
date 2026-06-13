@@ -2,14 +2,26 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
-import type { Category, Profile, Activity, UserChallenge, Achievement, LeaderboardEntry, ClanMember, ClanWithMembers, ClanLeaderboardEntry } from '@/lib/supabase/types'
+import type {
+  Category,
+  Profile,
+  Activity,
+  UserChallenge,
+  Achievement,
+  LeaderboardEntry,
+  ClanMember,
+  ClanWithMembers,
+  ClanLeaderboardEntry,
+} from '@/lib/supabase/types'
 
 // ─────────────────────────────────────────────────────────────
 // READ: Current authenticated user's profile
 // ─────────────────────────────────────────────────────────────
 export async function getMyProfile(): Promise<Profile | null> {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) return null
 
   let { data: profile } = await supabase
@@ -21,13 +33,13 @@ export async function getMyProfile(): Promise<Profile | null> {
   if (!profile) {
     const fullName = user.user_metadata?.full_name || user.user_metadata?.name || 'EcoPulse User'
     const avatar = user.user_metadata?.avatar_url || user.user_metadata?.picture || null
-    
+
     const { data: newProfile } = await supabase
       .from('profiles')
       .insert({ id: user.id, full_name: fullName, avatar_url: avatar })
       .select()
       .single()
-      
+
     profile = newProfile
   }
 
@@ -39,7 +51,9 @@ export async function getMyProfile(): Promise<Profile | null> {
 // ─────────────────────────────────────────────────────────────
 export async function getMyActivities(limit = 50): Promise<Activity[]> {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) return []
 
   const { data } = await supabase
@@ -57,7 +71,9 @@ export async function getMyActivities(limit = 50): Promise<Activity[]> {
 // ─────────────────────────────────────────────────────────────
 export async function getMyChallenges(): Promise<UserChallenge[]> {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) return []
 
   const { data } = await supabase
@@ -72,14 +88,21 @@ export async function getMyChallenges(): Promise<UserChallenge[]> {
 // ─────────────────────────────────────────────────────────────
 // READ: All achievements + which ones the user has earned
 // ─────────────────────────────────────────────────────────────
-export async function getMyAchievements(): Promise<{ achievement: Achievement; earned: boolean; earned_at?: string }[]> {
+export async function getMyAchievements(): Promise<
+  { achievement: Achievement; earned: boolean; earned_at?: string }[]
+> {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) return []
 
   const [{ data: allAchievements }, { data: earned }] = await Promise.all([
     supabase.from('achievements').select('*').order('created_at'),
-    supabase.from('user_achievements').select('*, achievement:achievements(*)').eq('user_id', user.id),
+    supabase
+      .from('user_achievements')
+      .select('*, achievement:achievements(*)')
+      .eq('user_id', user.id),
   ])
 
   const earnedIds = new Set((earned ?? []).map((e) => e.achievement_id))
@@ -110,13 +133,11 @@ export async function getLeaderboard(): Promise<LeaderboardEntry[]> {
 // ─────────────────────────────────────────────────────────────
 // WRITE: Log a new activity (Server Action)
 // ─────────────────────────────────────────────────────────────
-export async function logActivity(formData: {
-  label: string
-  category: Category
-  co2_kg: number
-}) {
+export async function logActivity(formData: { label: string; category: Category; co2_kg: number }) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) throw new Error('Not authenticated')
 
   const co2 = Number(formData.co2_kg)
@@ -168,7 +189,9 @@ export async function updateChallengeProgress(
   pointsReward: number,
 ) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) throw new Error('Not authenticated')
 
   const completed = newProgress >= targetValue
@@ -207,7 +230,9 @@ export async function updateChallengeProgress(
 // ─────────────────────────────────────────────────────────────
 export async function ensureChallengesAssigned() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) return
 
   await supabase.rpc('assign_challenges_to_user', { p_user_id: user.id })
@@ -218,7 +243,9 @@ export async function ensureChallengesAssigned() {
 // ─────────────────────────────────────────────────────────────
 export async function getMyClan(): Promise<ClanWithMembers | null> {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) return null
 
   // Find user's clan membership
@@ -262,10 +289,7 @@ export async function getMyClan(): Promise<ClanWithMembers | null> {
 export async function getClansToDiscover(limit = 20): Promise<ClanLeaderboardEntry[]> {
   const supabase = await createClient()
 
-  const { data } = await supabase
-    .from('clan_leaderboard')
-    .select('*')
-    .limit(limit)
+  const { data } = await supabase.from('clan_leaderboard').select('*').limit(limit)
 
   return (data ?? []) as ClanLeaderboardEntry[]
 }
@@ -288,13 +312,11 @@ export async function getClanLeaderboard(): Promise<ClanLeaderboardEntry[]> {
 // ─────────────────────────────────────────────────────────────
 // WRITE: Create a new clan (Server Action)
 // ─────────────────────────────────────────────────────────────
-export async function createClan(formData: {
-  name: string
-  description: string
-  tag: string
-}) {
+export async function createClan(formData: { name: string; description: string; tag: string }) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) throw new Error('Not authenticated')
 
   // Check user isn't already in a clan
@@ -321,13 +343,11 @@ export async function createClan(formData: {
   if (clanError) throw clanError
 
   // Add creator as leader
-  const { error: memberError } = await supabase
-    .from('clan_members')
-    .insert({
-      clan_id: clan.id,
-      user_id: user.id,
-      role: 'leader',
-    })
+  const { error: memberError } = await supabase.from('clan_members').insert({
+    clan_id: clan.id,
+    user_id: user.id,
+    role: 'leader',
+  })
 
   if (memberError) {
     // Rollback clan creation
@@ -343,7 +363,9 @@ export async function createClan(formData: {
 // ─────────────────────────────────────────────────────────────
 export async function joinClan(clanId: string) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) throw new Error('Not authenticated')
 
   // Check user isn't already in a clan
@@ -371,13 +393,11 @@ export async function joinClan(clanId: string) {
 
   if ((count ?? 0) >= clan.max_members) throw new Error('This clan is full.')
 
-  const { error } = await supabase
-    .from('clan_members')
-    .insert({
-      clan_id: clanId,
-      user_id: user.id,
-      role: 'member',
-    })
+  const { error } = await supabase.from('clan_members').insert({
+    clan_id: clanId,
+    user_id: user.id,
+    role: 'member',
+  })
 
   if (error) throw error
 
@@ -389,7 +409,9 @@ export async function joinClan(clanId: string) {
 // ─────────────────────────────────────────────────────────────
 export async function leaveClan() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) throw new Error('Not authenticated')
 
   // Find current membership
@@ -424,7 +446,10 @@ export async function leaveClan() {
 
       if (nextMember) {
         // Update clan created_by and promote next member
-        await supabase.from('clans').update({ created_by: nextMember.user_id }).eq('id', membership.clan_id)
+        await supabase
+          .from('clans')
+          .update({ created_by: nextMember.user_id })
+          .eq('id', membership.clan_id)
         await supabase.from('clan_members').update({ role: 'leader' }).eq('id', nextMember.id)
       }
 
